@@ -14,7 +14,7 @@ void setup(){
     USE_SERIAL.println();
     USE_SERIAL.println();
 
-    USE_SERIAL.println("Version 0.1")
+    USE_SERIAL.println("Version 0.1");
 
     for(uint8_t t = 4; t > 0; t--) {
         USE_SERIAL.printf("[SETUP] WAIT %d...\n", t);

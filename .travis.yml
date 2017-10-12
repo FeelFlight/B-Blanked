@@ -10,7 +10,8 @@ install:
 - pip install -U platformio
 
 script:
-- setWlanPasswd.bash
+- sed -i "s/WLANSSID/$WLANSSID/g"     src/main.cpp
+- sed -i "s/WLANPASSWD/$WLANPASSWD/g" src/main.cpp
 - platformio run
 
 deploy:
