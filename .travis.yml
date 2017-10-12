@@ -13,6 +13,8 @@ script:
 - sed -i "s/WLANSSID/$WLANSSID/g"     src/main.cpp
 - sed -i "s/WLANPASSWD/$WLANPASSWD/g" src/main.cpp
 - platformio run
+- mkdir upload
+- cp .pioenvs/huzzah/firmware.bin upload/blanked.bin
 
 deploy:
   provider: s3
@@ -23,5 +25,5 @@ deploy:
     secure: jZiEn7PTFRrwFu8ZmDEkUGjYuKSWmP+kI6biVKaRwhcqA+WeYjKOH3r5NgR5V+xoYcZA47Qm41pl6gi71aMEU2Xil4+HUdmLM6pXLU87Q0NG974cLesccaDy2/rkADmLP/jaqN66Pavd4l2tRxGOP+p1QQRXQOccFEW6j95PdPOyzppPZc6h8yzqmxerIgDSDFQuF4pRWjEtJSPrEyw79p834wvVVahlXRJ6jrqy5X4CiqabYmaR3QuT0W9tBHHtfMfgPJBCooTxqT0uqDnOSN0wU6TmQ8ZHg9y7d4ChOWLbpHwHhOk3UrDrTllbTSr7zRjqzwW69yivZX2e0XR89X8PFcLg8jIcZxgKyIKGo+BpCnaLlVQ1dxmIrDfcComino+3ZWC4lZDLgaw/uTfcAapn1sPBNhnxed7kr7u/RkZIfdXWZn4GSO1aDAJWXMF6lC2lq1JN7FlfpyGJuvsN6FQcIrq0W8jghZ0+8AAgwOzzNPG5bY34+8R3Qtp1d4hwqkan4peF0vVfeVRldtkissmup+bQRyU7xyYUPqL7EdtjJXBXwP3ChTv/FGu2eQhjgweLHsyrkcFBeqpKwjHnG0jUSV3QQPq9hpO8mk3eSjSbM91cY9S5t2BKtIR0ALCyyAn+B40P6OiJ+4v4d0ZdyXGjL3aRyOSg4jIOl5Awa10=
   skip_cleanup: true
   acl: public_read
-  local_dir: .pioenvs/huzzah/
-  upload-dir: blanked
+  local_dir: upload/
+  upload-dir: firmware
