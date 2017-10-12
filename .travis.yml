@@ -5,10 +5,14 @@ sudo: false
 cache:
   directories:
   - "~/.platformio"
+
 install:
 - pip install -U platformio
+
 script:
+- setWlanPasswd.bash
 - platformio run
+
 deploy:
   provider: s3
   bucket: 'feelflight'
