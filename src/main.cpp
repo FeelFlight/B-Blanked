@@ -28,7 +28,7 @@ void setup(){
 void loop(){
     if((WiFiMulti.run() == WL_CONNECTED)) {
 
-        t_httpUpdate_return ret = ESPhttpUpdate.update("http://s3.amazonaws.com/feelflight/blanked/firmware.bin");
+        t_httpUpdate_return ret = ESPhttpUpdate.update("http://s3.amazonaws.com/feelflight/firmware/blanked.bin");
 
         switch(ret) {
             case HTTP_UPDATE_FAILED:
