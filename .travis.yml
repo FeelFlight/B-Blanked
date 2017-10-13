@@ -13,7 +13,7 @@ script:
 - mkdir upload
 - pwd
 - ls -al
-- updateBuildVersion.sh
+- ./updateBuildVersion.sh
 - sed -i "s/WLANSSID/$WLANSSID/g"     src/main.cpp
 - sed -i "s/WLANPASSWD/$WLANPASSWD/g" src/main.cpp
 - platformio run
