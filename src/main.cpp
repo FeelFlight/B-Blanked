@@ -24,7 +24,9 @@ void updateFirmware(void){
     case HTTP_UPDATE_OK:
       Serial.println("HTTP_UPDATE_OK");
       delay(1000);
+      Serial.println("Resetting");
       ESP.reset();
+      delay(1000);
     break;
   }
 
@@ -47,12 +49,14 @@ boolean checkForNewFirmware(void){
       String payload = http.getString();
       int newVersion = payload.toInt();
       Serial.println(newVersion);
+
       if (BUILD_VERSION < newVersion){
         Serial.println("I need to update");
         updateFirmware();
       }else{
         Serial.println("No need to update");
       }
+
     }
   } else {
     Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
@@ -63,11 +67,6 @@ boolean checkForNewFirmware(void){
 
 void setup(){
     Serial.begin(115200);
-    Serial.println();
-    Serial.println();
-    Serial.println();
-
-    Serial.println("Version " + BUILD_VERSION);
 
     for(uint8_t t = 4; t > 0; t--) {
         Serial.printf("[SETUP] WAIT %d...\n", t);
@@ -75,16 +74,17 @@ void setup(){
         delay(1000);
     }
 
+    Serial.println("Version:" + BUILD_VERSION);
+
     WiFiMulti.addAP("WLANSSID", "WLANPASSWD");
 }
 
 void loop(){
 
-
     if((WiFiMulti.run() == WL_CONNECTED)) {
       Serial.println("Connected");
       checkForNewFirmware();
-      delay(231231);
+      delay(10000);
     }else{
       Serial.println("Waiting for connection");
       delay(1000);
