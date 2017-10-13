@@ -1,11 +1,9 @@
 #include <Arduino.h>
 #include <ESP8266WiFi.h>
-#include <ESP8266WiFiMulti.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 
 #define BUILD_VERSION REPLACE_WITH_CURRENT_VERSION
-ESP8266WiFiMulti WiFiMulti;
 
 void updateFirmware(void){
 
@@ -27,7 +25,7 @@ void updateFirmware(void){
       Serial.println("Resetting");
       ESP.reset();
       delay(1000);
-    break;
+      break;
   }
 
 }
@@ -65,28 +63,39 @@ boolean checkForNewFirmware(void){
   return true;
 }
 
+void connectToWifi(void){
+
+  WiFi.begin("WLANSSID", "WLANPASSWD");
+
+  while (WiFi.status() != WL_CONNECTED) {
+    delay(500);
+    Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.println("IP address: ");
+  Serial.println(WiFi.localIP());
+
+}
+
+
 void setup(){
     Serial.begin(115200);
 
-    for(uint8_t t = 4; t > 0; t--) {
+    for(uint8_t t = 5; t > 0; t--) {
         Serial.printf("[SETUP] WAIT %d...\n", t);
         Serial.flush();
-        delay(1000);
+        delay(500);
     }
 
-    Serial.println("Version:" + BUILD_VERSION);
+    Serial.print("Version:");
+    Serial.println(BUILD_VERSION);
 
-    WiFiMulti.addAP("WLANSSID", "WLANPASSWD");
+    connectToWifi();
 }
 
 void loop(){
-
-    if((WiFiMulti.run() == WL_CONNECTED)) {
-      Serial.println("Connected");
-      checkForNewFirmware();
-      delay(10000);
-    }else{
-      Serial.println("Waiting for connection");
-      delay(1000);
-    }
+  checkForNewFirmware();
+  delay(60000);
 }
