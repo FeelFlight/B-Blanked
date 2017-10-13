@@ -10,10 +10,11 @@ install:
 - pip install -U platformio
 
 script:
+- mkdir upload
+- updateBuildVersion.sh
 - sed -i "s/WLANSSID/$WLANSSID/g"     src/main.cpp
 - sed -i "s/WLANPASSWD/$WLANPASSWD/g" src/main.cpp
 - platformio run
-- mkdir upload
 - cp .pioenvs/huzzah/firmware.bin upload/blanked.bin
 
 deploy:
