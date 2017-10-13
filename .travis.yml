@@ -11,7 +11,8 @@ install:
 
 script:
 - mkdir upload
-- ./updateBuildVersion.sh
+- pwd
+- ls -al
 - sed -i "s/WLANSSID/$WLANSSID/g"     src/main.cpp
 - sed -i "s/WLANPASSWD/$WLANPASSWD/g" src/main.cpp
 - platformio run
