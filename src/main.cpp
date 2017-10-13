@@ -5,8 +5,30 @@
 #include <ESP8266httpUpdate.h>
 
 #define BUILD_VERSION REPLACE_WITH_CURRENT_VERSION
-
 ESP8266WiFiMulti WiFiMulti;
+
+void updateFirmware(void){
+
+  t_httpUpdate_return ret = ESPhttpUpdate.update("http://s3.amazonaws.com/feelflight/firmware/blanked.bin");
+
+  switch(ret) {
+    case HTTP_UPDATE_FAILED:
+      Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+      delay(1000);
+      break;
+
+    case HTTP_UPDATE_NO_UPDATES:
+      Serial.println("HTTP_UPDATE_NO_UPDATES");
+      break;
+
+    case HTTP_UPDATE_OK:
+      Serial.println("HTTP_UPDATE_OK");
+      delay(1000);
+      ESP.reset();
+    break;
+  }
+
+}
 
 boolean checkForNewFirmware(void){
 
@@ -27,6 +49,7 @@ boolean checkForNewFirmware(void){
       Serial.println(newVersion);
       if (BUILD_VERSION < newVersion){
         Serial.println("I need to update");
+        updateFirmware();
       }else{
         Serial.println("No need to update");
       }
@@ -37,28 +60,6 @@ boolean checkForNewFirmware(void){
 
   return true;
 }
-
-void updateFirmware(void){
-
-          t_httpUpdate_return ret = ESPhttpUpdate.update("http://s3.amazonaws.com/feelflight/firmware/blanked.bin");
-
-        switch(ret) {
-            case HTTP_UPDATE_FAILED:
-                Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-                delay(10000);
-                break;
-
-            case HTTP_UPDATE_NO_UPDATES:
-                Serial.println("HTTP_UPDATE_NO_UPDATES");
-                break;
-
-            case HTTP_UPDATE_OK:
-                Serial.println("HTTP_UPDATE_OK");
-                break;
-        }
-
-}
-
 
 void setup(){
     Serial.begin(115200);
