@@ -3,64 +3,29 @@
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 
-#define BUILD_VERSION REPLACE_WITH_CURRENT_VERSION
+#define BUILD_VERSION        REPLACE_WITH_CURRENT_VERSION
+#define ULR_FIRMWARE_BIN     "http://s3.amazonaws.com/feelflight/firmware/blanked.bin"
+#define URL_FIRMWARE_VERSION "http://s3.amazonaws.com/feelflight/firmware/blanked.version"
 
-void updateFirmware(void){
+void checkForNewFirmware(void){
 
-  t_httpUpdate_return ret = ESPhttpUpdate.update("http://s3.amazonaws.com/feelflight/firmware/blanked.bin");
-
-  switch(ret) {
-    case HTTP_UPDATE_FAILED:
-      Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
-      delay(1000);
-      break;
-
-    case HTTP_UPDATE_NO_UPDATES:
-      Serial.println("HTTP_UPDATE_NO_UPDATES");
-      break;
-
-    case HTTP_UPDATE_OK:
-      Serial.println("HTTP_UPDATE_OK");
-      delay(1000);
-      Serial.println("Resetting");
-      ESP.reset();
-      delay(1000);
-      break;
-  }
-
-}
-
-boolean checkForNewFirmware(void){
-
-  HTTPClient http;
-
-  Serial.print("[HTTP] begin...\n");
-  http.begin("http://s3.amazonaws.com/feelflight/firmware/blanked.version");
-
-  Serial.print("[HTTP] GET...\n");
-  int httpCode = http.GET();
-
-  if(httpCode > 0) {
-    Serial.printf("[HTTP] GET... code: %d\n", httpCode);
+    HTTPClient http;
+    http.begin(URL_FIRMWARE_VERSION);
+    int httpCode = http.GET();
 
     if(httpCode == HTTP_CODE_OK) {
-      String payload = http.getString();
-      int newVersion = payload.toInt();
-      Serial.println(newVersion);
+        String payload = http.getString();
+        int newVersion = payload.toInt();
 
-      if (BUILD_VERSION < newVersion){
-        Serial.println("I need to update");
-        updateFirmware();
-      }else{
-        Serial.println("No need to update");
-      }
+        if (BUILD_VERSION < newVersion){
+            Serial.println("I need to update");
+            t_httpUpdate_return ret = ESPhttpUpdate.update(ULR_FIRMWARE_BIN);
 
+            if (ret == HTTP_UPDATE_FAILED){
+                Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
+            }
+        }
     }
-  } else {
-    Serial.printf("[HTTP] GET... failed, error: %s\n", http.errorToString(httpCode).c_str());
-  }
-
-  return true;
 }
 
 void connectToWifi(void){
@@ -89,7 +54,7 @@ void setup(){
         delay(500);
     }
 
-    Serial.print("Version:");
+    Serial.print("My version:");
     Serial.println(BUILD_VERSION);
 
     connectToWifi();

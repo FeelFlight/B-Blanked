@@ -6,6 +6,8 @@ let newversion=oldversion+1
 echo "============="
 echo "New Version:"
 echo $newversion
+echo "============="
 
 sed -i "s/REPLACE_WITH_CURRENT_VERSION/$newversion/g" src/main.cpp
+
 echo $newversion > upload/blanked.version
