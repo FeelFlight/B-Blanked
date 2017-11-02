@@ -1,42 +1,16 @@
 #include <Arduino.h>
-#include <Ticker.h>
 #include <ESP8266WiFi.h>
 #include <ESP8266HTTPClient.h>
 #include <ESP8266httpUpdate.h>
 #include <PubSubClient.h>
 #include <EEPROM.h>
-
-#define BUILD_VERSION        REPLACE_WITH_CURRENT_VERSION
-#define ULR_FIRMWARE_BIN     "http://s3.amazonaws.com/feelflight/firmware/blanket.bin"
-#define URL_FIRMWARE_VERSION "http://s3.amazonaws.com/feelflight/firmware/blanket.version"
-#define MQTT_SERVER          "172.26.2.68"
-
-#define PIN_LED_RED     0
-#define PIN_LED_BLUE    2
-
-#define PIN_SDA         4
-#define PIN_SCL         5
-
-#define PIN_MISO       12
-#define PIN_MOSI       13
-#define PIN_SCK        14
-#define PIN_15         15
-#define PIN_16         16
-
-#define PIN_VIBRATION PIN_15
-#define PIN_LED_R     PIN_MISO
-#define PIN_LED_G     PIN_MOSI
-#define PIN_LED_B     PIN_SCK
-
-Ticker  tickerLED;
-Ticker  tickerVibration;
-uint8_t pulseLED_intensity    = 0;
-boolean pulseLED_direction_up = true;
+#include "pin.h"
+#include "light.h"
+#include "main.h"
+#include "vibration.h"
 
 WiFiClient   espClient;
 PubSubClient mqtt_client(espClient);
-
-int8_t myID = 0; // > 0 Real ID, 0 not set, < 0 requested
 
 void checkForNewFirmware(void){
 
@@ -92,52 +66,6 @@ void pinSetup(void){
     analogWrite(PIN_LED_B      ,0);
 }
 
-void vibrationForMilliseconds(uint16_t time){
-    digitalWrite(PIN_VIBRATION, HIGH);
-    tickerVibration.once_ms(time, vibrationOff);
-}
-
-void vibrationOff(void){
-    digitalWrite(PIN_VIBRATION, LOW);
-}
-
-void light(uint8_t r, uint8_t g, uint8_t b){
-    analogWrite(PIN_LED_R ,r);
-    analogWrite(PIN_LED_G ,g);
-    analogWrite(PIN_LED_B ,b);
-}
-
-void pulseStep(void){
-
-    if(pulseLED_direction_up){
-        pulseLED_intensity++;
-    }else{
-        pulseLED_intensity--;
-    }
-
-    if(pulseLED_intensity == 100){
-        pulseLED_direction_up = false;
-    }
-
-    if(pulseLED_intensity ==   0){
-        pulseLED_direction_up = true;
-    }
-
-    light(255.0 * (pulseLED_intensity / 100.0), 162.0 * (pulseLED_intensity / 100.0), 0);
-
-}
-
-void pulseLED(boolean state){
-    if (state){
-        pulseLED_intensity    = 0;
-        pulseLED_direction_up = true;
-        tickerLED.attach_ms(50, pulseStep);
-    }else{
-        tickerLED.detach();
-        light(0, 0, 0);
-    }
-}
-
 void setup_mqtt() {
   while (!mqtt_client.connected()) {
     Serial.print("Attempting MQTT connection...");
@@ -153,8 +81,6 @@ void setup_mqtt() {
   }
 }
 
-
-
 void setup(){
     Serial.begin(115200);
     Serial.print("My version:");
@@ -168,8 +94,6 @@ void setup(){
     connectToWifi();
     mqtt_client.setServer("172.26.2.68", 1883);
     setup_mqtt();
-    getMyID(); // To trigger request
-
 }
 
 void eraseEEPROM(void){
@@ -187,7 +111,7 @@ void loop(){
   //eraseEEPROM();
   Serial.println("Loop");
   setup_mqtt();
-  mqtt_client.publish("blanket/1/ping", millis());
+  mqtt_client.publish("blanket/1/ping", "1");
   mqtt_client.loop();
   delay(1000);
 

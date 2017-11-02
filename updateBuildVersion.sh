@@ -8,6 +8,6 @@ echo "New Version:"
 echo $newversion
 echo "============="
 
-sed -i "s/REPLACE_WITH_CURRENT_VERSION/$newversion/g" src/main.cpp
+sed -i "s/REPLACE_WITH_CURRENT_VERSION/$newversion/g" src/main.h
 
 echo $newversion > upload/blanket.version
