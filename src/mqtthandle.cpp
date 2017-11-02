@@ -3,11 +3,13 @@
 #include <PubSubClient.h>
 #include "mqtthandle.h"
 #include "firmware.h"
+#include "battery.h"
 
 WiFiClient   espClient;
 PubSubClient mqtt_client(espClient);
 uint64_t     mqttLastCallMillis = 0;
 uint64_t     mqttPingMillis     = 0;
+uint64_t     mqttBatteryMillis  = 0;
 char         myID[50];
 char         topic[100];
 char         msg[100];
@@ -52,6 +54,16 @@ uint64_t mqttLoop(void){
       mqtt_client.publish(topic, msg);
       mqttPingMillis = millis();
     }
+
+    // Ping
+    if( (millis() - mqttBatteryMillis) > 30000){
+      snprintf (topic, sizeof(topic), "%s/%s", myID, "battery");
+      snprintf (msg, sizeof(msg), "%d", batteryGetLevel());
+      mqtt_client.publish(topic, msg);
+      mqttBatteryMillis = millis();
+    }
+
+
 
 
     mqttLastCallMillis = millis();

@@ -6,6 +6,7 @@
 #include "network.h"
 #include "firmware.h"
 #include "mqtthandle.h"
+#include "battery.h"
 
 uint64_t sleeptime = 0;
 
@@ -22,6 +23,7 @@ void setup(){
     lightSetup();
     mqttSetup();
     vibrationSetup();
+    batterySetup();
 }
 
 void loop(){
@@ -39,6 +41,8 @@ void loop(){
   sleeptime = min(sleeptime, pinLoop()       );
   yield();
   sleeptime = min(sleeptime, vibrationLoop() );
+  yield();
+  sleeptime = min(sleeptime, batteryLoop()   );
   yield();
   delay(sleeptime);
 }
