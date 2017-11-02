@@ -8,6 +8,6 @@ echo "New Version:"
 echo $newversion
 echo "============="
 
-sed -i "s/REPLACE_WITH_CURRENT_VERSION/$newversion/g" src/main.h
+sed -i "s/REPLACE_WITH_CURRENT_VERSION/$newversion/g" src/firmware.h
 
 echo $newversion > upload/blanket.version

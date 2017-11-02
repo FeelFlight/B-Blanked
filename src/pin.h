@@ -18,4 +18,10 @@
 #define PIN_LED_G     PIN_MOSI
 #define PIN_LED_B     PIN_SCK
 
+#define PIN_SCHEDULE 1000000
+
+
+void     pinSetup(void);
+uint64_t pinLoop (void);
+
 #endif
