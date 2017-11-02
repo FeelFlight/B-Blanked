@@ -15,7 +15,7 @@ script:
 - sed -i "s/WLANSSID/$WLANSSID/g"     src/main.cpp
 - sed -i "s/WLANPASSWD/$WLANPASSWD/g" src/main.cpp
 - platformio run
-- cp .pioenvs/huzzah/firmware.bin upload/blanked.bin
+- cp .pioenvs/huzzah/firmware.bin upload/blanket.bin
 
 deploy:
   provider: s3
