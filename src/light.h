@@ -3,11 +3,10 @@
 
 #define LIGHT_SCHEDULE 1000000
 
-enum Colour { red, green, blue };
-
-void     lightSetup(void           );
-uint64_t lightLoop (void           );
-void     pulseLED  (boolean        );
-void     setColour (Colour, uint8_t);
+void     lightSetup(void                              );
+uint64_t lightLoop (void                              );
+void     pulseLED  (uint8_t, boolean                  );
+void     light     (uint8_t, uint8_t, uint8_t, uint8_t);
+void     flashLED  (uint8_t, uint8_t                  );
 
 #endif

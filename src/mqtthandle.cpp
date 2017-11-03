@@ -4,6 +4,7 @@
 #include "mqtthandle.h"
 #include "firmware.h"
 #include "battery.h"
+#include "light.h"
 #include "vibration.h"
 
 WiFiClient   espClient;
@@ -21,9 +22,11 @@ void callback(char* topicchars, byte* payloadbytes, unsigned int length) {
   Serial.print("Message arrived [");
   Serial.print(topic);
   Serial.print("] ");
+
   for (uint8_t i = 0; i < length; i++) {
     payload[i] = payloadbytes[i];
   }
+
   payload[length] = '\0';
   Serial.println(payload);
 
@@ -38,7 +41,46 @@ void callback(char* topicchars, byte* payloadbytes, unsigned int length) {
     vibrationForMilliseconds(dval);
   }
 
+  if (topic.indexOf("flash") > 0){
+    Serial.println("flash");
+    uint8_t li = topic.lastIndexOf('/');
+    String  si = topic.substring(li+1);
+    uint8_t i  = si.toInt();
+    uint16_t dval = atoi(payload);
+    flashLED(i, dval);
+  }
 
+  if (topic.indexOf("pulse") > 0){
+    Serial.println("pulse");
+    uint8_t li = topic.lastIndexOf('/');
+    String  si = topic.substring(li+1);
+    uint8_t i  = si.toInt();
+
+    if (String(payload) == "ON"){
+        pulseLED(i, true);
+    }else{
+        pulseLED(i, false);
+    }
+
+  }
+
+  if (topic.indexOf("colour") > 0){
+    Serial.println("colour");
+    uint8_t li = topic.lastIndexOf('/');
+    String  si = topic.substring(li+1);
+    uint8_t i  = si.toInt();
+    char subbuff[5];
+    memcpy(subbuff, &payload[0], 3 );
+    subbuff[3] = '\0';
+    uint8_t r  = atoi(subbuff);
+    memcpy(subbuff, &payload[4], 3 );
+    subbuff[3] = '\0';
+    uint8_t g  = atoi(subbuff);
+    memcpy(subbuff, &payload[8], 3 );
+    subbuff[3] = '\0';
+    uint8_t b  = atoi(subbuff);
+    light(i,r,g,b);
+  }
 
 }
 
@@ -93,9 +135,6 @@ uint64_t mqttLoop(void){
       mqtt_client.publish(topic, msg);
       mqttBatteryMillis = millis();
     }
-
-
-
 
     mqttLastCallMillis = millis();
   }
