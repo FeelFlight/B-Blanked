@@ -4,6 +4,7 @@
 #include "mqtthandle.h"
 #include "firmware.h"
 #include "battery.h"
+#include "vibration.h"
 
 WiFiClient   espClient;
 PubSubClient mqtt_client(espClient);
@@ -31,8 +32,13 @@ void callback(char* topicchars, byte* payloadbytes, unsigned int length) {
     firmwarecheckForNew();
   }
 
+  if (topic.indexOf("vibrate") > 0){
+    Serial.println("vibrate");
+    uint16_t dval = atoi(payload);
+    vibrationForMilliseconds(dval);
+  }
 
-    //double dval = atof(vchar);
+
 
 }
 
