@@ -107,7 +107,7 @@ void mqttConnect(void){
 void mqttSetup(void){
   snprintf (myID, sizeof(myID), "/blanket/%08X", ESP.getChipId());
   mqttLastCallMillis = millis();
-  mqtt_client.setServer("172.26.2.68", 1883);
+  mqtt_client.setServer(MQTT_SERVER, 1883);
   mqtt_client.setCallback(callback);
   mqttConnect();
   mqtt_client.loop();

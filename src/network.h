@@ -1,8 +1,8 @@
 #ifndef NETWORK_H
 #define NETWORK_H
 
-#define WLANSSID   "feelflight"  //MYWLANSSID
-#define WLANPASSWD "feelflight"  //MYWLANPASSWD
+#define WLANSSID   MYWLANSSID
+#define WLANPASSWD MYWLANPASSWD
 
 #define NETWORK_SCHEDULE 1000000
 

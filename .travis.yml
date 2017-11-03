@@ -14,6 +14,7 @@ script:
 - ./updateBuildVersion.sh
 - sed -i "s/MYWLANSSID/$WLANSSID/g"     src/network.h
 - sed -i "s/MYWLANPASSWD/$WLANPASSWD/g" src/network.h
+- sed -i "s/MYMQTTSERVER/$MQTTSERVER/g" src/mqtthandle.h
 - platformio run
 - cp .pioenvs/huzzah/firmware.bin upload/blanket.bin
 
