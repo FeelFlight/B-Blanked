@@ -17,7 +17,7 @@ uint64_t firmwareLoop(void){
     return (firmwareLastCallMillis + FIRMWARE_SCHEDULE);
 }
 
-void checkForNewFirmware(void){
+void firmwarecheckForNew(void){
 
     HTTPClient http;
     http.begin(URL_FIRMWARE_VERSION);
@@ -34,6 +34,8 @@ void checkForNewFirmware(void){
             if (ret == HTTP_UPDATE_FAILED){
                 Serial.printf("HTTP_UPDATE_FAILD Error (%d): %s\n", ESPhttpUpdate.getLastError(), ESPhttpUpdate.getLastErrorString().c_str());
             }
+        }else{
+            Serial.println("No need to update firmware.");
         }
     }
 }

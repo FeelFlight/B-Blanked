@@ -9,6 +9,6 @@
 
 void     firmwareSetup      (void);
 uint64_t firmwareLoop       (void);
-void     checkForNewFirmware(void);
+void     firmwarecheckForNew(void);
 
 #endif
