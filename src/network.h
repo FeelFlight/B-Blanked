@@ -6,8 +6,8 @@
 
 #define NETWORK_SCHEDULE 1000000
 
-void     networkSetup (void);
-uint64_t networkLoop  (void);
-void     connectToWifi(void);
+void     networkSetup        (void);
+uint64_t networkLoop         (void);
+void     networkconnectToWifi(void);
 
 #endif

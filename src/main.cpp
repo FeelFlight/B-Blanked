@@ -12,6 +12,7 @@ uint64_t sleeptime = 0;
 
 void setup(){
     Serial.begin(115200);
+    Serial.println("====================================");
     Serial.print("My version:");
     Serial.println(BUILD_VERSION);
     Serial.print("My id:");

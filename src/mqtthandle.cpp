@@ -86,7 +86,9 @@ void callback(char* topicchars, byte* payloadbytes, unsigned int length) {
 
 void mqttConnect(void){
   while (!mqtt_client.connected()) {
-    Serial.print("Attempting MQTT connection...");
+    Serial.print("Attempting MQTT connection to ");
+    Serial.print(MQTT_SERVER);
+    Serial.print("...");
 
     if (mqtt_client.connect(myID)) {
       Serial.println("connected");
